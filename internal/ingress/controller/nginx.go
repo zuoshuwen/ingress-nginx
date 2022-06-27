@@ -131,7 +131,7 @@ func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXContro
 		config.DefaultSSLCertificate,
 		config.ResyncPeriod,
 		config.Client,
-		n.updateCh,
+		n.updateCh, // 当有更新后，推到此channel
 		config.DisableCatchAll,
 		config.DeepInspector,
 		config.IngressClassConfiguration)
@@ -301,6 +301,7 @@ func (n *NGINXController) Start() {
 	klog.InfoS("Starting NGINX process")
 	n.start(cmd)
 
+	// 定时处理事件队列
 	go n.syncQueue.Run(time.Second, n.stopCh)
 	// force initial sync
 	n.syncQueue.EnqueueTask(task.GetDummyObject("initial-sync"))
@@ -324,7 +325,7 @@ func (n *NGINXController) Start() {
 			klog.ErrorS(n.validationWebhookServer.ListenAndServeTLS("", ""), "Error listening for TLS connections")
 		}()
 	}
-
+	// 主线程这里，监听事件
 	for {
 		select {
 		case err := <-n.ngxErrCh:
@@ -347,7 +348,7 @@ func (n *NGINXController) Start() {
 				klog.V(3).InfoS("Event received", "type", evt.Type, "object", evt.Obj)
 				if evt.Type == store.ConfigurationEvent {
 					// TODO: is this necessary? Consider removing this special case
-					n.syncQueue.EnqueueTask(task.GetDummyObject("configmap-change"))
+					n.syncQueue.EnqueueTask(task.GetDummyObject("configmap-change")) // 事件放入队列
 					continue
 				}
 
@@ -851,6 +852,8 @@ func (n *NGINXController) IsDynamicConfigurationEnough(pcfg *ingress.Configurati
 
 // configureDynamically encodes new Backends in JSON format and POSTs the
 // payload to an internal HTTP endpoint handled by Lua.
+// configureDynamically 以 JSON 格式对新后端进行编码，并将有效负载 POST 到 Lua 处理的内部 HTTP 端点。
+// todo pb 效率会不会更高
 func (n *NGINXController) configureDynamically(pcfg *ingress.Configuration) error {
 	backendsChanged := !reflect.DeepEqual(n.runningConfig.Backends, pcfg.Backends)
 	if backendsChanged {

@@ -71,7 +71,8 @@ func main() {
 	if err != nil {
 		klog.Fatal(err)
 	}
-
+	// 客户端
+	// 通过客户端，建立与 ApiServer 的通信，监控资源事件，Informer 机制
 	kubeClient, err := createApiserverClient(conf.APIServerHost, conf.RootCAFile, conf.KubeConfigFile)
 	if err != nil {
 		handleFatalInitError(err)

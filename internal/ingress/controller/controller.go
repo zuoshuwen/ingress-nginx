@@ -143,6 +143,7 @@ func (n NGINXController) GetPublishService() *apiv1.Service {
 // syncIngress collects all the pieces required to assemble the NGINX
 // configuration file and passes the resulting data structures to the backend
 // (OnUpdate) when a reload is deemed necessary.
+// syncIngress 收集组装 NGINX 配置文件所需的所有部分，并在认为需要重新加载时将生成的数据结构传递到后端 (OnUpdate)。
 func (n *NGINXController) syncIngress(interface{}) error {
 	n.syncRateLimiter.Accept()
 
@@ -508,6 +509,7 @@ func (n *NGINXController) getDefaultUpstream() *ingress.Backend {
 }
 
 // getConfiguration returns the configuration matching the standard kubernetes ingress
+// getConfiguration 返回匹配标准 kubernetes 入口的配置
 func (n *NGINXController) getConfiguration(ingresses []*ingress.Ingress) (sets.String, []*ingress.Server, *ingress.Configuration) {
 	upstreams, servers := n.getBackendServers(ingresses)
 	var passUpstreams []*ingress.SSLPassthroughBackend

@@ -157,6 +157,7 @@ func (e NotExistsError) Error() string {
 
 // Run initiates the synchronization of the informers against the API server.
 func (i *Informer) Run(stopCh chan struct{}) {
+	// 监听的5个对象的事件
 	go i.Secret.Run(stopCh)
 	go i.Endpoint.Run(stopCh)
 	if i.IngressClass != nil {

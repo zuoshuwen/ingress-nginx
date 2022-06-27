@@ -31,6 +31,7 @@ var (
 
 // updateServerLocations inspects the generated locations configuration for a server
 // normalizing the path and adding an additional exact location when is possible
+// updateServerLocations 检查为服务器生成的本地配置，以规范化路径并在可能的情况下添加额外的确切位置
 func updateServerLocations(locations []*ingress.Location) []*ingress.Location {
 	newLocations := []*ingress.Location{}
 
