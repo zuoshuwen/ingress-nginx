@@ -109,12 +109,16 @@ type EventType string
 
 const (
 	// CreateEvent event associated with new objects in an informer
+	// 与 informer 中的新对象关联的 CreateEvent 事件
 	CreateEvent EventType = "CREATE"
 	// UpdateEvent event associated with an object update in an informer
+	// 与 informer 中的对象更新关联的 UpdateEvent 事件
 	UpdateEvent EventType = "UPDATE"
 	// DeleteEvent event associated when an object is removed from an informer
+	// 当对象从 informer 中移除时关联的 DeleteEvent 事件
 	DeleteEvent EventType = "DELETE"
 	// ConfigurationEvent event associated when a controller configuration object is created or updated
+	// 创建或更新控制器配置对象时关联的 ConfigurationEvent 事件
 	ConfigurationEvent EventType = "CONFIGURATION"
 )
 
@@ -226,6 +230,7 @@ type k8sStore struct {
 
 	// secretIngressMap contains information about which ingress references a
 	// secret in the annotations.
+	// secretIngressMap 包含有关哪些入口引用 annotations 中的秘密的信息。
 	secretIngressMap ObjectRefMap
 
 	// updateCh
@@ -401,7 +406,7 @@ func New(
 			klog.InfoS("Ignoring delete for catch-all because of --disable-catch-all", "ingress", klog.KObj(ing))
 			return
 		}
-
+		// 注解，https://kubernetes.io/zh-cn/docs/concepts/overview/working-with-objects/annotations/
 		store.listers.IngressWithAnnotation.Delete(ing)
 
 		key := k8s.MetaNamespaceKey(ing)

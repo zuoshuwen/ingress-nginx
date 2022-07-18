@@ -93,7 +93,7 @@ func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXContro
 		}),
 
 		stopCh:   make(chan struct{}),
-		updateCh: channels.NewRingChannel(1024),
+		updateCh: channels.NewRingChannel(1024), // eapache/channels，提供一些channel应用模式的方法，比如扇入扇出模式
 
 		ngxErrCh: make(chan error),
 
@@ -338,7 +338,7 @@ func (n *NGINXController) Start() {
 			if process.IsRespawnIfRequired(err) {
 				return
 			}
-
+		// 消费事件数据
 		case event := <-n.updateCh.Out():
 			if n.isShuttingDown {
 				break
@@ -351,7 +351,7 @@ func (n *NGINXController) Start() {
 					n.syncQueue.EnqueueTask(task.GetDummyObject("configmap-change")) // 事件放入队列
 					continue
 				}
-
+				// 事件数据推入队列
 				n.syncQueue.EnqueueSkippableTask(evt.Obj)
 			} else {
 				klog.Warningf("Unexpected event type received %T", event)
