@@ -126,7 +126,7 @@ func (t *Queue) worker() {
 		}
 
 		klog.V(3).InfoS("syncing", "key", item.Key)
-		if err := t.sync(key); err != nil {
+		if err := t.sync(key); err != nil { // sync 就是 syncIngress
 			klog.ErrorS(err, "requeuing", "key", item.Key)
 			t.queue.AddRateLimited(Element{
 				Key:       item.Key,

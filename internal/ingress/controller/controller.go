@@ -173,7 +173,7 @@ func (n *NGINXController) syncIngress(interface{}) error {
 
 		pcfg.ConfigurationChecksum = fmt.Sprintf("%v", hash)
 
-		err := n.OnUpdate(*pcfg)
+		err := n.OnUpdate(*pcfg) //这里是要reload的
 		if err != nil {
 			n.metricCollector.IncReloadErrorCount()
 			n.metricCollector.ConfigSuccess(hash, false)
@@ -206,7 +206,7 @@ func (n *NGINXController) syncIngress(interface{}) error {
 
 	retriesRemaining := retry.Steps
 	err := wait.ExponentialBackoff(retry, func() (bool, error) {
-		err := n.configureDynamically(pcfg)
+		err := n.configureDynamically(pcfg) //这里是不用reload的
 		if err == nil {
 			klog.V(2).Infof("Dynamic reconfiguration succeeded.")
 			return true, nil

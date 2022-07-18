@@ -136,7 +136,7 @@ func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXContro
 		config.DeepInspector,
 		config.IngressClassConfiguration)
 
-	n.syncQueue = task.NewTaskQueue(n.syncIngress)
+	n.syncQueue = task.NewTaskQueue(n.syncIngress) // 设置消费方
 
 	if config.UpdateStatus {
 		n.syncStatus = status.NewStatusSyncer(status.Config{
@@ -658,6 +658,7 @@ Error: %v
 // changes were detected. The received backend Configuration is merged with the
 // configuration ConfigMap before generating the final configuration file.
 // Returns nil in case the backend was successfully reloaded.
+// 每当检测到配置更改时，同步循环都会调用 OnUpdate。 在生成最终的配置文件之前，将接收到的后端 Configuration 与配置 ConfigMap 合并。 如果后端成功重新加载，则返回 nil。
 func (n *NGINXController) OnUpdate(ingressCfg ingress.Configuration) error {
 	cfg := n.store.GetBackendConfiguration()
 	cfg.Resolver = n.resolver
@@ -857,7 +858,7 @@ func (n *NGINXController) IsDynamicConfigurationEnough(pcfg *ingress.Configurati
 func (n *NGINXController) configureDynamically(pcfg *ingress.Configuration) error {
 	backendsChanged := !reflect.DeepEqual(n.runningConfig.Backends, pcfg.Backends)
 	if backendsChanged {
-		err := configureBackends(pcfg.Backends)
+		err := configureBackends(pcfg.Backends) // 给lua发送命令
 		if err != nil {
 			return err
 		}
@@ -865,7 +866,7 @@ func (n *NGINXController) configureDynamically(pcfg *ingress.Configuration) erro
 
 	streamConfigurationChanged := !reflect.DeepEqual(n.runningConfig.TCPEndpoints, pcfg.TCPEndpoints) || !reflect.DeepEqual(n.runningConfig.UDPEndpoints, pcfg.UDPEndpoints)
 	if streamConfigurationChanged {
-		err := updateStreamConfiguration(pcfg.TCPEndpoints, pcfg.UDPEndpoints)
+		err := updateStreamConfiguration(pcfg.TCPEndpoints, pcfg.UDPEndpoints) // 给lua发送命令
 		if err != nil {
 			return err
 		}
@@ -873,7 +874,7 @@ func (n *NGINXController) configureDynamically(pcfg *ingress.Configuration) erro
 
 	serversChanged := !reflect.DeepEqual(n.runningConfig.Servers, pcfg.Servers)
 	if serversChanged {
-		err := configureCertificates(pcfg.Servers)
+		err := configureCertificates(pcfg.Servers) // 给lua发送命令
 		if err != nil {
 			return err
 		}
@@ -989,6 +990,7 @@ type sslConfiguration struct {
 
 // configureCertificates JSON encodes certificates and POSTs it to an internal HTTP endpoint
 // that is handled by Lua
+// configureCertificates JSON 对证书进行编码并将其发布到由 Lua 处理的内部 HTTP 端点
 func configureCertificates(rawServers []*ingress.Server) error {
 	configuration := &sslConfiguration{
 		Certificates: map[string]string{},
