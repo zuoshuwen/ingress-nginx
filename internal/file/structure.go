@@ -42,6 +42,7 @@ var (
 
 // CreateRequiredDirectories verifies if the required directories to
 // start the ingress controller exist and creates the missing ones.
+// CreateRequiredDirectories 验证是否存在启动入口控制器所需的目录并创建缺少的目录。
 func CreateRequiredDirectories() error {
 	for _, directory := range directories {
 		_, err := os.Stat(directory)

@@ -17,4 +17,5 @@ limitations under the License.
 package file
 
 // ReadWriteByUser defines linux permission to read and write files for the owner user
+// ReadWriteByUser 定义了 linux 为 owner 用户读写文件的权限
 const ReadWriteByUser = 0700

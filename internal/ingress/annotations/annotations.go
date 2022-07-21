@@ -70,9 +70,11 @@ import (
 )
 
 // DeniedKeyName name of the key that contains the reason to deny a location
+// DeniedKeyName 包含拒绝位置原因的密钥名称
 const DeniedKeyName = "Denied"
 
 // Ingress defines the valid annotations present in one NGINX Ingress rule
+// Ingress 定义了一个 NGINX Ingress 规则中存在的有效 annotations
 type Ingress struct {
 	metav1.ObjectMeta
 	BackendProtocol      string
@@ -120,11 +122,13 @@ type Ingress struct {
 }
 
 // Extractor defines the annotation parsers to be used in the extraction of annotations
+// Extractor 定义了用于提取 annotations 的 annotations 解析器
 type Extractor struct {
 	annotations map[string]parser.IngressAnnotation
 }
 
 // NewAnnotationExtractor creates a new annotations extractor
+// NewAnnotationExtractor 创建一个新的注释提取器
 func NewAnnotationExtractor(cfg resolver.Resolver) Extractor {
 	return Extractor{
 		map[string]parser.IngressAnnotation{
@@ -173,6 +177,7 @@ func NewAnnotationExtractor(cfg resolver.Resolver) Extractor {
 }
 
 // Extract extracts the annotations from an Ingress
+// Extract 从 Ingress 中提取注释
 func (e Extractor) Extract(ing *networking.Ingress) *Ingress {
 	pia := &Ingress{
 		ObjectMeta: ing.ObjectMeta,
