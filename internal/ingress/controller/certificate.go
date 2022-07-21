@@ -31,6 +31,7 @@ import (
 
 // verifyHostname returns nil if c is a valid certificate for the named host.
 // Otherwise it returns an error describing the mismatch.
+// 如果 c 是指定主机的有效证书，则 verifyHostname 返回 nil。 否则，它会返回描述不匹配的错误。
 func verifyHostname(h string, c *x509.Certificate) error {
 	// IP addresses may be written in [ ].
 	candidateIP := h

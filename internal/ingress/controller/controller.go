@@ -55,6 +55,7 @@ const (
 )
 
 // Configuration contains all the settings required by an Ingress controller
+// Configuration 包含 Ingress 控制器所需的所有设置
 type Configuration struct {
 	APIServerHost string
 	RootCAFile    string
@@ -236,6 +237,7 @@ func (n *NGINXController) syncIngress(interface{}) error {
 
 // CheckIngress returns an error in case the provided ingress, when added
 // to the current configuration, generates an invalid configuration
+// 如果提供的入口在添加到当前配置时生成无效配置，CheckIngress 将返回错误
 func (n *NGINXController) CheckIngress(ing *networking.Ingress) error {
 	startCheck := time.Now().UnixNano() / 1000000
 

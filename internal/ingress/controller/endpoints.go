@@ -34,6 +34,7 @@ import (
 )
 
 // getEndpoints returns a list of Endpoint structs for a given service/target port combination.
+// getEndpoints 返回给定服务/目标端口组合的 Endpoint 结构列表。
 func getEndpoints(s *corev1.Service, port *corev1.ServicePort, proto corev1.Protocol,
 	getServiceEndpoints func(string) (*corev1.Endpoints, error)) []ingress.Endpoint {
 

@@ -69,6 +69,7 @@ const (
 )
 
 // NewNGINXController creates a new NGINX Ingress controller.
+// NewNGINXController 创建一个新的 NGINX Ingress 控制器。
 func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXController {
 	eventBroadcaster := record.NewBroadcaster()
 	eventBroadcaster.StartLogging(klog.Infof)
@@ -208,6 +209,7 @@ func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXContro
 }
 
 // NGINXController describes a NGINX Ingress controller.
+// NGINXController 描述了一个 NGINX Ingress 控制器
 type NGINXController struct {
 	cfg *Configuration
 
@@ -254,6 +256,7 @@ type NGINXController struct {
 }
 
 // Start starts a new NGINX master process running in the foreground.
+// Start 启动一个在前台运行的新 NGINX 主进程。
 func (n *NGINXController) Start() {
 	klog.InfoS("Starting NGINX Ingress controller")
 
@@ -363,6 +366,7 @@ func (n *NGINXController) Start() {
 }
 
 // Stop gracefully stops the NGINX master process.
+// Stop 优雅地停止 NGINX 主进程。
 func (n *NGINXController) Stop() error {
 	n.isShuttingDown = true
 

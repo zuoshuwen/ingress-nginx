@@ -57,6 +57,7 @@ func (p *TCPProxy) Get(host string) *TCPServer {
 
 // Handle reads enough information from the connection to extract the hostname
 // and open a connection to the passthrough server.
+// Handle 从连接中读取足够的信息以提取主机名并打开与直通服务器的连接。
 func (p *TCPProxy) Handle(conn net.Conn) {
 	defer conn.Close()
 	data := make([]byte, 4096)

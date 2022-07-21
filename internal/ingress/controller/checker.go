@@ -34,6 +34,7 @@ func (n NGINXController) Name() string {
 }
 
 // Check returns if the nginx healthz endpoint is returning ok (status code 200)
+// 检查 nginx healthz 端点是否返回正常（状态代码 200）
 func (n *NGINXController) Check(_ *http.Request) error {
 	if n.isShuttingDown {
 		return fmt.Errorf("the ingress controller is shutting down")
@@ -60,6 +61,7 @@ func (n *NGINXController) Check(_ *http.Request) error {
 		return fmt.Errorf("checking for NGINX process with PID %v: %w", pid, err)
 	}
 
+	// 校验当前内存中是否正常有后端服务信息
 	statusCode, _, err := nginx.NewGetStatusRequest("/is-dynamic-lb-initialized")
 	if err != nil {
 		return fmt.Errorf("checking if the dynamic load balancer started: %w", err)
