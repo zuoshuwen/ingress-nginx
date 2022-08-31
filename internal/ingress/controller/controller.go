@@ -332,6 +332,7 @@ func (n *NGINXController) CheckIngress(ing *networking.Ingress) error {
 		testedSize = 1
 	}
 
+	// 写入nginx.conf
 	content, err := n.generateTemplate(cfg, *pcfg)
 	if err != nil {
 		n.metricCollector.IncCheckErrorCount(ing.ObjectMeta.Namespace, ing.Name)
